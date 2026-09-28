@@ -250,7 +250,9 @@
     const row = $("monitors");
     row.replaceChildren(...config.monitors.map((m) => {
       const b = document.createElement("button");
-      b.textContent = `${m.label} (${m.width}×${m.height})`;
+      b.innerHTML = `<div style="font-weight:600">${m.label}</div><div style="font-size:10px;opacity:0.7">${m.width}×${m.height}</div>`;
+      b.style.minHeight = "50px";
+      b.style.padding = "4px 8px";
       b.classList.toggle("on", m.index === config.active);
       b.onclick = () => send({ t: "monitor", index: m.index });
       return b;
@@ -280,7 +282,6 @@
   $("clear").onclick = clearInk;
   $("colorPicker").onchange = (e) => {
     inkColor = e.target.value;
-    $("colorPreview").style.backgroundColor = inkColor;
   };
   $("refreshBtn").onclick = () => location.reload();
   $("copyBtn").onclick = () => sendKey(VK.CTRL, VK.C);
