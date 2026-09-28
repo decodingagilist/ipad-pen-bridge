@@ -59,6 +59,11 @@
 <div id="status"><b>Connecting…</b></div>
 <button id="gear" aria-label="Settings">⚙︎</button>
 <div id="panel">
+  <h3 style="display:flex;align-items:center;gap:8px;margin:0 0 8px">Pen Color</h3>
+  <div class="row" style="margin-bottom:12px">
+    <input type="color" id="colorPicker" value="#e8edf3" title="Pen color" style="flex:0 0 auto">
+  </div>
+
   <h3>Pen goes to</h3>
   <div class="row" id="monitors"></div>
   <h3>Area</h3>
@@ -67,14 +72,13 @@
     <button id="fitWin">Fit to window</button>
     <button id="drawRegion">Draw area</button>
   </div>
-  <h3>Color & Tools</h3>
+  <h3>Tools</h3>
   <div class="row">
-    <input type="color" id="colorPicker" value="#e8edf3" title="Pen color">
     <button id="mirrorBtn">Show screen</button>
     <button id="eraser">Eraser</button>
+    <button id="clear">Clear ink</button>
   </div>
   <div class="row">
-    <button id="clear">Clear ink</button>
     <button id="refreshBtn">Refresh</button>
   </div>
   <h3>Windows Control</h3>
