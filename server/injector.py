@@ -162,6 +162,8 @@ class Injector:
     def __init__(self) -> None:
         self.state = PenStateMachine()
         self.backend = _make_backend()
+        self.keyboard = KeyboardBackend() if sys.platform == "win32" else None
+        self.scroll = ScrollBackend() if sys.platform == "win32" else None
 
     @property
     def mode(self) -> str:
@@ -178,6 +180,16 @@ class Injector:
         x, y = self.state.last
         for frame in self.state.feed(LEAVE, x, y):
             self.backend.send(frame)
+
+    def key_combo(self, *vks: int) -> None:
+        """Send a key combination (e.g. Ctrl+C)."""
+        if self.keyboard:
+            self.keyboard.send_combination(*vks)
+
+    def do_scroll(self, x: int, y: int, direction: int) -> None:
+        """Scroll at screen position (x, y). direction > 0 = up, < 0 = down."""
+        if self.scroll:
+            self.scroll.scroll(x, y, direction)
 
 
 class _SyntheticPenBackend:
@@ -247,6 +259,37 @@ class _LogBackend:
         if f.flags & (PF_DOWN | PF_UP):
             log.info("%s at (%d, %d) pressure %d", "DOWN" if f.flags & PF_DOWN else "UP",
                      f.x, f.y, f.pressure)
+
+
+class KeyboardBackend:
+    """Injects keyboard events on Windows via SendInput."""
+    def __init__(self) -> None:
+        self.user32 = ctypes.windll.user32
+
+    def send_key(self, vk: int, release: bool = False) -> None:
+        """Send a keydown or keyup event."""
+        KEYEVENTF_KEYUP = 0x0002
+        flags = KEYEVENTF_KEYUP if release else 0
+        self.user32.keybd_event(ctypes.c_uint8(vk), 0, ctypes.c_uint32(flags), 0)
+
+    def send_combination(self, *vks: int) -> None:
+        """Press keys in order, then release in reverse (e.g. Ctrl+C)."""
+        for vk in vks:
+            self.send_key(vk)
+        for vk in reversed(vks):
+            self.send_key(vk, release=True)
+
+
+class ScrollBackend:
+    """Injects scroll events on Windows."""
+    def __init__(self) -> None:
+        self.user32 = ctypes.windll.user32
+
+    def scroll(self, x: int, y: int, direction: int) -> None:
+        """Scroll at (x, y). direction > 0 = up, < 0 = down."""
+        WHEEL_DELTA = 120
+        self.user32.SetCursorPos(x, y)
+        self.user32.mouse_event(0x0800, 0, 0, ctypes.c_uint32(WHEEL_DELTA * direction), 0)  # MOUSEEVENTF_WHEEL
 
 
 def _make_backend():

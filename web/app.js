@@ -9,8 +9,10 @@
 
   let ws = null, config = null, retryMs = 500;
   let geom = { x: 0, y: 0, w: 1, h: 1 };
-  let mirrorOn = false, eraserOn = false, regionMode = false;
+  let mirrorOn = false, eraserOn = false, regionMode = false, screenshotMode = false;
   let lastInk = null, fadeTimer = null, regionStart = null, pendingFrame = false;
+  let inkColor = "#e8edf3", screenshotImage = null, screenshotAnnotations = null;
+  let scalingMode = "letterbox";  // "letterbox" or "fill"
 
   // ------------------------------------------------------------------ pairing
   function readToken() {
@@ -102,6 +104,25 @@
     return [(e.clientX - geom.x) / geom.w, (e.clientY - geom.y) / geom.h];
   }
 
+  // ---------------------------------------------------------------- keyboard & scroll
+  function sendKey(...vks) {
+    send({ t: "key", vks });
+  }
+
+  function scrollArea(dir) {
+    const cx = geom.x + geom.w / 2, cy = geom.y + geom.h / 2;
+    const nx = (cx - geom.x) / geom.w, ny = (cy - geom.y) / geom.h;
+    send({ t: "scroll", x: nx, y: ny, direction: dir > 0 ? 1 : -1 });
+  }
+
+  surface.addEventListener("wheel", (e) => {
+    e.preventDefault();
+    scrollArea(e.deltaY);
+  });
+
+  // Windows virtual key codes
+  const VK = { CTRL: 0x11, SHIFT: 0x10, ALT: 0x12, C: 0x43, V: 0x56, TAB: 0x09, MENU: 0x12 };
+
   // ---------------------------------------------------------------- pen input
   function sample(ev, e) {
     const [x, y] = norm(e);
@@ -167,7 +188,7 @@
     if (!lastInk) return;
     const x = e.clientX - geom.x, y = e.clientY - geom.y;
     inkCtx.globalCompositeOperation = eraserOn ? "destination-out" : "source-over";
-    inkCtx.strokeStyle = "#e8edf3";
+    inkCtx.strokeStyle = eraserOn ? "#e8edf3" : inkColor;
     inkCtx.lineCap = "round";
     inkCtx.lineWidth = eraserOn ? 18 : 0.8 + (e.pressure || 0.3) * 3;
     inkCtx.beginPath();
@@ -246,7 +267,7 @@
   };
   $("drawRegion").onclick = () => {
     if (regionMode) { setRegionMode(false); return; }
-    send({ t: "region", rect: null });  // select relative to the whole monitor
+    send({ t: "region", rect: null });
     if (!mirrorOn && config && config.mirrorAvailable) setMirror(true);
     setRegionMode(true);
   };
@@ -257,6 +278,16 @@
     send({ t: "eraser", on: eraserOn });
   };
   $("clear").onclick = clearInk;
+  $("colorPicker").onchange = (e) => {
+    inkColor = e.target.value;
+    $("colorPreview").style.backgroundColor = inkColor;
+  };
+  $("refreshBtn").onclick = () => location.reload();
+  $("copyBtn").onclick = () => sendKey(VK.CTRL, VK.C);
+  $("pasteBtn").onclick = () => sendKey(VK.CTRL, VK.V);
+  $("tabBtn").onclick = () => sendKey(VK.ALT, VK.TAB);
+  $("scrollUpBtn").onclick = () => scrollArea(120);
+  $("scrollDownBtn").onclick = () => scrollArea(-120);
 
   // Keep the iPad awake while writing (Safari 16.4+).
   async function keepAwake() {

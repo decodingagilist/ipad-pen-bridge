@@ -127,6 +127,16 @@ class Bridge:
                 self.start_mirror(ws)
             else:
                 self.stop_mirror()
+        elif t == "key":
+            vks = [int(v) for v in m.get("vks", [])]
+            if vks:
+                self.injector.key_combo(*vks)
+        elif t == "scroll":
+            nx, ny = m.get("x", 0.5), m.get("y", 0.5)
+            x, y = self.target.map(nx, ny)
+            direction = int(m.get("direction", 0))
+            if direction:
+                self.injector.do_scroll(x, y, direction)
 
 
 # -------------------------------------------------------------------- hotkeys

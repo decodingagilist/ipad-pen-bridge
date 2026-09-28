@@ -9,6 +9,9 @@
 <meta name="apple-mobile-web-app-title" content="PenBridge">
 <title>PenBridge</title>
 <style>
+  input[type="color"] { width:40px; height:40px; border:0; border-radius:8px; cursor:pointer; }
+</style>
+<style>
   :root { --bg:#111418; --area:#1b2027; --edge:#3b82f6; --ink:#e8edf3; --muted:#8b95a3; --panel:#232a33; --on:#3b82f6; --warn:#f59e0b; --bad:#ef4444; }
   * { box-sizing:border-box; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
   html, body { margin:0; height:100%; overflow:hidden; background:var(--bg); color:var(--ink);
@@ -64,11 +67,26 @@
     <button id="fitWin">Fit to window</button>
     <button id="drawRegion">Draw area</button>
   </div>
-  <h3>Tools</h3>
+  <h3>Color & Tools</h3>
   <div class="row">
+    <input type="color" id="colorPicker" value="#e8edf3" title="Pen color">
     <button id="mirrorBtn">Show screen</button>
     <button id="eraser">Eraser</button>
+  </div>
+  <div class="row">
     <button id="clear">Clear ink</button>
+    <button id="refreshBtn">Refresh</button>
+  </div>
+  <h3>Windows Control</h3>
+  <div class="row">
+    <button id="copyBtn">Copy</button>
+    <button id="pasteBtn">Paste</button>
+    <button id="tabBtn">Alt+Tab</button>
+  </div>
+  <h3>Scroll</h3>
+  <div class="row">
+    <button id="scrollUpBtn">Scroll ↑</button>
+    <button id="scrollDownBtn">Scroll ↓</button>
   </div>
   <div id="hint"></div>
 </div>
