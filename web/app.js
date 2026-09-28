@@ -250,9 +250,9 @@
     const row = $("monitors");
     row.replaceChildren(...config.monitors.map((m) => {
       const b = document.createElement("button");
-      b.innerHTML = `<div style="font-weight:600">${m.label}</div><div style="font-size:10px;opacity:0.7">${m.width}×${m.height}</div>`;
-      b.style.minHeight = "50px";
-      b.style.padding = "4px 8px";
+      b.innerHTML = `<div style="font-weight:600;font-size:12px">${m.label}</div><div style="font-size:9px;opacity:0.6">${m.width}×${m.height}</div>`;
+      b.style.minHeight = "44px";
+      b.style.padding = "2px 6px";
       b.classList.toggle("on", m.index === config.active);
       b.onclick = () => send({ t: "monitor", index: m.index });
       return b;

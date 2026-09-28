@@ -25,15 +25,16 @@
   #status.bad b { color:var(--bad); }
   #gear { position:fixed; top:max(4px, env(safe-area-inset-top)); right:8px; width:44px; height:44px; border:0;
     border-radius:22px; background:var(--panel); color:var(--ink); font-size:22px; cursor:pointer; }
-  #panel { position:fixed; top:56px; right:8px; width:min(340px, calc(100vw - 16px)); max-height:calc(100vh - 120px);
-    background:var(--panel); border-radius:14px; padding:12px; display:none; box-shadow:0 10px 30px #0008;
-    overflow-y:auto; -webkit-overflow-scrolling:touch; }
+  #panel { position:fixed; top:56px; right:8px; width:min(340px, calc(100vw - 16px)); max-height:60vh;
+    background:var(--panel); border-radius:14px; padding:8px; display:none; box-shadow:0 10px 30px #0008;
+    overflow-y:scroll; -webkit-overflow-scrolling:touch; }
   #panel.open { display:block; }
-  #panel h3 { margin:10px 0 6px; font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); }
+  #panel h3 { margin:6px 0 4px; font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); padding:0 4px; }
   #panel h3:first-child { margin-top:0; }
   .row { display:flex; flex-wrap:wrap; gap:6px; }
-  .row button { flex:1 1 auto; min-height:40px; border:1px solid #3a4452; background:#1b2027; color:var(--ink);
-    border-radius:10px; font:inherit; padding:0 10px; cursor:pointer; }
+  .row button { flex:1 1 auto; min-height:36px; border:1px solid #3a4452; background:#1b2027; color:var(--ink);
+    border-radius:10px; font:inherit; padding:4px 8px; cursor:pointer; font-size:13px; }
+  #panel .row { gap:4px; margin-bottom:6px; }
   .row button.on { background:var(--on); border-color:var(--on); }
   .row button:disabled { opacity:.4; cursor:not-allowed; }
   #colorPicker { width:100%; max-width:100px; height:40px; border:1px solid #3a4452; border-radius:10px;
