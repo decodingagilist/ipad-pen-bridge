@@ -25,10 +25,14 @@
   #status.bad b { color:var(--bad); }
   #gear { position:fixed; top:max(4px, env(safe-area-inset-top)); right:8px; width:44px; height:44px; border:0;
     border-radius:22px; background:var(--panel); color:var(--ink); font-size:22px; cursor:pointer; }
-  #panel { position:fixed; top:56px; right:8px; width:min(340px, calc(100vw - 16px)); max-height:60vh;
-    background:var(--panel); border-radius:14px; padding:8px; display:none; box-shadow:0 10px 30px #0008;
-    overflow-y:scroll; -webkit-overflow-scrolling:touch; }
-  #panel.open { display:block; }
+  #panel { position:fixed; top:56px; right:8px; width:min(340px, calc(100vw - 16px)); height:60vh;
+    background:var(--panel); border-radius:14px; display:none; box-shadow:0 10px 30px #0008;
+    display:flex; flex-direction:column; }
+  #panel.open { display:flex; }
+  #panelScroll { flex:1; overflow-y:scroll; -webkit-overflow-scrolling:touch; padding:8px; }
+  #panelScroll::-webkit-scrollbar { width:6px; }
+  #panelScroll::-webkit-scrollbar-track { background:transparent; }
+  #panelScroll::-webkit-scrollbar-thumb { background:#3a4452; border-radius:3px; }
   #panel h3 { margin:6px 0 4px; font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); padding:0 4px; }
   #panel h3:first-child { margin-top:0; }
   .row { display:flex; flex-wrap:wrap; gap:6px; }
@@ -60,40 +64,42 @@
 <div id="status"><b>Connecting…</b></div>
 <button id="gear" aria-label="Settings">⚙︎</button>
 <div id="panel">
-  <h3 style="display:flex;align-items:center;gap:8px;margin:0 0 8px">Pen Color</h3>
-  <div class="row" style="margin-bottom:12px">
-    <input type="color" id="colorPicker" value="#e8edf3" title="Pen color" style="flex:0 0 auto">
-  </div>
+  <div id="panelScroll">
+    <h3 style="display:flex;align-items:center;gap:8px;margin:0 0 8px">Pen Color</h3>
+    <div class="row" style="margin-bottom:12px">
+      <input type="color" id="colorPicker" value="#e8edf3" title="Pen color" style="flex:0 0 auto">
+    </div>
 
-  <h3>Pen goes to</h3>
-  <div class="row" id="monitors"></div>
-  <h3>Area</h3>
-  <div class="row">
-    <button id="full">Whole screen</button>
-    <button id="fitWin">Fit to window</button>
-    <button id="drawRegion">Draw area</button>
+    <h3>Pen goes to</h3>
+    <div class="row" id="monitors"></div>
+    <h3>Area</h3>
+    <div class="row">
+      <button id="full">Whole screen</button>
+      <button id="fitWin">Fit to window</button>
+      <button id="drawRegion">Draw area</button>
+    </div>
+    <h3>Tools</h3>
+    <div class="row">
+      <button id="mirrorBtn">Show screen</button>
+      <button id="eraser">Eraser</button>
+      <button id="clear">Clear ink</button>
+    </div>
+    <div class="row">
+      <button id="refreshBtn">Refresh</button>
+    </div>
+    <h3>Windows Control</h3>
+    <div class="row">
+      <button id="copyBtn">Copy</button>
+      <button id="pasteBtn">Paste</button>
+      <button id="tabBtn">Alt+Tab</button>
+    </div>
+    <h3>Scroll</h3>
+    <div class="row">
+      <button id="scrollUpBtn">Scroll ↑</button>
+      <button id="scrollDownBtn">Scroll ↓</button>
+    </div>
+    <div id="hint"></div>
   </div>
-  <h3>Tools</h3>
-  <div class="row">
-    <button id="mirrorBtn">Show screen</button>
-    <button id="eraser">Eraser</button>
-    <button id="clear">Clear ink</button>
-  </div>
-  <div class="row">
-    <button id="refreshBtn">Refresh</button>
-  </div>
-  <h3>Windows Control</h3>
-  <div class="row">
-    <button id="copyBtn">Copy</button>
-    <button id="pasteBtn">Paste</button>
-    <button id="tabBtn">Alt+Tab</button>
-  </div>
-  <h3>Scroll</h3>
-  <div class="row">
-    <button id="scrollUpBtn">Scroll ↑</button>
-    <button id="scrollDownBtn">Scroll ↓</button>
-  </div>
-  <div id="hint"></div>
 </div>
 <div id="pair">
   <form id="pairForm">
@@ -102,6 +108,6 @@
     <button type="submit">Connect</button>
   </form>
 </div>
-<script src="/s/app.js?v=2"></script>
+<script src="/s/app.js?v=3"></script>
 </body>
 </html>
