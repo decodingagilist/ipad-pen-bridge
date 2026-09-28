@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PenBridge">
+<title>PenBridge</title>
+<style>
+  :root { --bg:#111418; --area:#1b2027; --edge:#3b82f6; --ink:#e8edf3; --muted:#8b95a3; --panel:#232a33; --on:#3b82f6; --warn:#f59e0b; --bad:#ef4444; }
+  * { box-sizing:border-box; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
+  html, body { margin:0; height:100%; overflow:hidden; background:var(--bg); color:var(--ink);
+    font:15px -apple-system, system-ui, sans-serif; position:fixed; inset:0; touch-action:none; }
+  #surface { position:absolute; inset:0; touch-action:none; }
+  #area { position:absolute; background:var(--area); outline:1px solid var(--edge); outline-offset:0; }
+  #mirror { position:absolute; inset:0; width:100%; height:100%; object-fit:fill; display:none; }
+  #ink, #sel { position:absolute; inset:0; width:100%; height:100%; }
+  #cursor { position:absolute; width:10px; height:10px; margin:-5px 0 0 -5px; border-radius:50%;
+    border:2px solid var(--edge); pointer-events:none; display:none; }
+  #status { position:fixed; top:max(8px, env(safe-area-inset-top)); left:12px; font-size:12px; color:var(--muted);
+    pointer-events:none; }
+  #status b { color:var(--ink); font-weight:600; }
+  #status.bad b { color:var(--bad); }
+  #gear { position:fixed; top:max(4px, env(safe-area-inset-top)); right:8px; width:44px; height:44px; border:0;
+    border-radius:22px; background:var(--panel); color:var(--ink); font-size:22px; }
+  #panel { position:fixed; top:56px; right:8px; width:min(340px, calc(100vw - 16px)); background:var(--panel);
+    border-radius:14px; padding:12px; display:none; box-shadow:0 10px 30px #0008; }
+  #panel.open { display:block; }
+  #panel h3 { margin:10px 0 6px; font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); }
+  #panel h3:first-child { margin-top:0; }
+  .row { display:flex; flex-wrap:wrap; gap:6px; }
+  .row button { flex:1 1 auto; min-height:40px; border:1px solid #3a4452; background:#1b2027; color:var(--ink);
+    border-radius:10px; font:inherit; padding:0 10px; }
+  .row button.on { background:var(--on); border-color:var(--on); }
+  .row button:disabled { opacity:.4; }
+  #hint { font-size:12px; color:var(--muted); margin-top:8px; min-height:1em; }
+  #pair { position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:var(--bg); }
+  #pair.open { display:flex; }
+  #pair form { background:var(--panel); padding:20px; border-radius:14px; width:min(360px, 90vw); }
+  #pair input { width:100%; font:inherit; padding:10px; border-radius:8px; border:1px solid #3a4452;
+    background:#1b2027; color:var(--ink); -webkit-user-select:text; user-select:text; margin:10px 0; }
+  #pair button { width:100%; min-height:44px; border:0; border-radius:10px; background:var(--on); color:#fff; font:inherit; }
+</style>
+</head>
+<body>
+<div id="surface">
+  <div id="area">
+    <img id="mirror" alt="">
+    <canvas id="ink"></canvas>
+    <canvas id="sel"></canvas>
+  </div>
+  <div id="cursor"></div>
+</div>
+<div id="status"><b>Connecting…</b></div>
+<button id="gear" aria-label="Settings">⚙︎</button>
+<div id="panel">
+  <h3>Pen goes to</h3>
+  <div class="row" id="monitors"></div>
+  <h3>Area</h3>
+  <div class="row">
+    <button id="full">Whole screen</button>
+    <button id="fitWin">Fit to window</button>
+    <button id="drawRegion">Draw area</button>
+  </div>
+  <h3>Tools</h3>
+  <div class="row">
+    <button id="mirrorBtn">Show screen</button>
+    <button id="eraser">Eraser</button>
+    <button id="clear">Clear ink</button>
+  </div>
+  <div id="hint"></div>
+</div>
+<div id="pair">
+  <form id="pairForm">
+    <div>Enter the pairing code shown on your laptop (the part after <b>#t=</b>).</div>
+    <input id="pairInput" autocomplete="off" autocapitalize="off" spellcheck="false">
+    <button type="submit">Connect</button>
+  </form>
+</div>
+<script src="/s/app.js"></script>
+</body>
+</html>
